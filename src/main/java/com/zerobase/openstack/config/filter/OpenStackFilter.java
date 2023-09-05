@@ -1,6 +1,6 @@
 package com.zerobase.openstack.config.filter;
 
-import org.jboss.resteasy.client.jaxrs.internal.ClientResponse;
+import com.zerobase.openstack.data.OpenStackAuth;
 import org.openstack4j.api.exceptions.ClientResponseException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -101,6 +101,7 @@ public class OpenStackFilter extends UsernamePasswordAuthenticationFilter {
             try {
                 if (checkExpire(tokenExpired)) {
                     //TODO :  인증 객체 구현 필요
+                    new OpenStackAuth(tokenId);
                     chain.doFilter(httpServletRequest, httpServletResponse);
                 } else {
                     unsuccessfulAuthentication(httpServletRequest, httpServletResponse, new AuthenticationServiceException("Token has been expired"));

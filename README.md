@@ -87,4 +87,36 @@ unscopedAuth 메서드:
 
 첫 번째 생성자: username, password, domain을 인자로 받아 OpenStack 인증을 수행합니다. OSFactory.builderV3().endpoint("") 부분에서는 endpoint URL이 아직 정의되지 않았음을 알 수 있습니다. 인증에 필요한 정보가 제공되면 해당 클라이언트를 사용하여 인증을 수행하고 결과 토큰을 저장합니다.
 두 번째 생성자: username 및 password만 인자로 받아 첫 번째 생성자를 호출하는 오버로드된 생성자입니다. domain은 null로 설정되며, 첫 번째 생성자에서 이를 처리합니다.
-이 클래스는 OpenStack과의 인증을 추상화하며, 주어진 사용자 이름, 비밀번호, 도메인을 사용하여 인증을 수행하고 결과 토큰을 저장합니다.</details>
+이 클래스는 OpenStack과의 인증을 추상화하며, 주어진 사용자 이름, 비밀번호, 도메인을 사용하여 인증을 수행하고 결과 토큰을 저장합니다.
+</details>
+
+### OpenStackAuth(String tokenId)
+<details>
+이 코드는 OpenStackAuth라는 클래스의 생성자를 정의하고 있습니다. 이 생성자는 OpenStack 클라우드 플랫폼의 인증 절차와 관련이 있습니다. 주어진 tokenId를 이용하여 OpenStack API에 인증을 시도하는 로직을 수행합니다. 코드의 주요 부분들을 상세하게 살펴보겠습니다.
+
+OpenStack Client 설정:
+
+java
+Copy code
+IOSClientBuilder.V3 v3 = OSFactory.builderV3()
+.endpoint(Constants.OPENSTACK_KEYSTONE_URL + Constants.KEYSTONE_API_VERSION)
+.token(tokenId);
+OSFactory.builderV3()를 통해 OpenStack API V3 버전에 대한 클라이언트 빌더를 생성합니다.
+.endpoint(Constants.OPENSTACK_KEYSTONE_URL + Constants.KEYSTONE_API_VERSION)를 사용하여 인증 서비스의 URL을 설정합니다. 이 URL은 상수로 미리 정의된 OPENSTACK_KEYSTONE_URL와 KEYSTONE_API_VERSION을 결합하여 생성됩니다.
+.token(tokenId)를 통해 주어진 tokenId를 사용하여 인증을 시도할 것임을 지정합니다.
+인증 시도:
+
+java
+Copy code
+this.osClient = v3.authenticate();
+위에서 설정한 클라이언트 빌더를 통해 실제 인증을 시도합니다. 성공적으로 인증이 수행되면 osClient 객체에 인증된 클라이언트 세션 정보가 저장됩니다.
+Token 정보 저장:
+
+java
+Copy code
+this.token = this.osClient.getToken();
+this.tokenId = this.token.getId();
+this.osClient.getToken()을 통해 인증된 토큰 정보를 가져와서 token 멤버 변수에 저장합니다.
+그리고 this.token.getId()를 통해 토큰의 ID 값을 가져와 tokenId 멤버 변수에 저장합니다.
+간단하게 요약하면, 이 생성자는 주어진 tokenId를 사용하여 OpenStack에 인증을 시도하고, 인증 성공 시 관련 토큰 정보를 내부 변수에 저장하는 작업을 수행합니다
+</details>
